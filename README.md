@@ -1,4 +1,4 @@
-# Rime ❄️
+# 🔤 Rime
 
 > **Universal Filename Sanitizer, Case Transformer & Batch Rename Engine**
 

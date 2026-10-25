@@ -1,4 +1,4 @@
-"""Configuration loader for Glaze."""
+"""Configuration loader for Rime."""
 
 from __future__ import annotations
 
@@ -9,10 +9,10 @@ from typing import Any
 
 
 def load_user_config() -> dict[str, Any]:
-    """Loads optional user defaults from ~/.config/glaze/glaze.toml."""
+    """Loads optional user defaults from ~/.config/rime/rime.toml."""
     xdg_config = os.environ.get("XDG_CONFIG_HOME")
     base = Path(xdg_config) if xdg_config else Path.home() / ".config"
-    cfg_path = base / "glaze" / "glaze.toml"
+    cfg_path = base / "rime" / "rime.toml"
     if cfg_path.is_file():
         try:
             with cfg_path.open("rb") as f:

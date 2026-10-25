@@ -1,5 +1,5 @@
 {
-  description = "Glaze - Universal Filename Sanitizer, Case Transformer & Batch Rename Engine";
+  description = "Rime - Universal Filename Sanitizer, Case Transformer & Batch Rename Engine";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -25,10 +25,10 @@
       };
       lib = pkgs.lib;
 
-      glazePackage = pkgs.python3Packages.buildPythonApplication {
-        pname = "glaze";
+      rimePackage = pkgs.python3Packages.buildPythonApplication {
+        pname = "rime";
         version = "0.1.0";
-        src = ./.;
+        src = pkgs.lib.cleanSource ./.;
         pyproject = true;
 
         build-system = [
@@ -47,25 +47,25 @@
 
         meta = with lib; {
           description = "Universal filename sanitizer, case transformer, and batch rename engine";
-          homepage = "https://github.com/SpanishSyntax/Glaze";
+          homepage = "https://github.com/SpanishSyntax/Rime";
           license = licenses.mit;
-          mainProgram = "glaze";
+          mainProgram = "rime";
         };
       };
     in {
       packages = {
-        default = glazePackage;
-        glaze = glazePackage;
+        default = rimePackage;
+        rime = rimePackage;
       };
 
       apps = {
         default = {
           type = "app";
-          program = "${glazePackage}/bin/glaze";
+          program = "${rimePackage}/bin/rime";
         };
-        glaze = {
+        rime = {
           type = "app";
-          program = "${glazePackage}/bin/glaze";
+          program = "${rimePackage}/bin/rime";
         };
       };
 
@@ -81,28 +81,28 @@
     // {
       overlays = {
         default = final: prev: {
-          glaze = self.packages.${prev.stdenv.hostPlatform.system}.default;
+          rime = self.packages.${prev.stdenv.hostPlatform.system}.default;
         };
-        glaze = self.overlays.default;
+        rime = self.overlays.default;
       };
 
       nixosModules = {
-        default = self.nixosModules.glaze;
-        glaze = {
+        default = self.nixosModules.rime;
+        rime = {
           config,
           lib,
           pkgs,
           ...
         }: let
-          cfg = config.programs.glaze;
+          cfg = config.programs.rime;
           system = pkgs.stdenv.hostPlatform.system;
         in {
-          options.programs.glaze = {
-            enable = lib.mkEnableOption "Glaze - Universal filename sanitizer & case transformer";
+          options.programs.rime = {
+            enable = lib.mkEnableOption "Rime - Universal filename sanitizer & case transformer";
             package = lib.mkOption {
               type = lib.types.package;
               default = self.packages.${system}.default;
-              description = "The Glaze package to install system-wide.";
+              description = "The Rime package to install system-wide.";
             };
           };
           config = lib.mkIf cfg.enable {
@@ -112,38 +112,38 @@
       };
 
       homeManagerModules = {
-        default = self.homeManagerModules.glaze;
-        glaze = {
+        default = self.homeManagerModules.rime;
+        rime = {
           config,
           lib,
           pkgs,
           ...
         }: let
-          cfg = config.programs.glaze;
+          cfg = config.programs.rime;
           tomlFormat = pkgs.formats.toml {};
           system = pkgs.stdenv.hostPlatform.system;
-          defaultGlaze = self.packages.${system}.default;
+          defaultRime = self.packages.${system}.default;
         in {
-          options.programs.glaze = {
-            enable = lib.mkEnableOption "Glaze - Universal filename sanitizer & case transformer";
+          options.programs.rime = {
+            enable = lib.mkEnableOption "Rime - Universal filename sanitizer & case transformer";
 
             package = lib.mkOption {
               type = lib.types.package;
-              default = defaultGlaze;
-              description = "The Glaze package to use.";
+              default = defaultRime;
+              description = "The Rime package to use.";
             };
 
             settings = lib.mkOption {
               type = tomlFormat.type;
               default = {};
-              description = "Configuration written to ~/.config/glaze/glaze.toml.";
+              description = "Configuration written to ~/.config/rime/rime.toml.";
             };
           };
 
           config = lib.mkIf cfg.enable {
             home.packages = [cfg.package];
-            xdg.configFile."glaze/glaze.toml" = lib.mkIf (cfg.settings != {}) {
-              source = tomlFormat.generate "glaze.toml" cfg.settings;
+            xdg.configFile."rime/rime.toml" = lib.mkIf (cfg.settings != {}) {
+              source = tomlFormat.generate "rime.toml" cfg.settings;
             };
           };
         };

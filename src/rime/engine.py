@@ -6,9 +6,9 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from glaze.history import save_undo_log
-from glaze.transform import sanitize_filename
-from glaze.ui import ui
+from rime.history import save_undo_log
+from rime.transform import sanitize_filename
+from rime.ui import ui
 
 
 @dataclass
@@ -196,6 +196,6 @@ def execute_renames(plans: list[RenamePlan]) -> list[tuple[str, str]]:
     if executed_ops:
         save_undo_log(executed_ops)
         ui.success(
-            f"Successfully renamed {len(executed_ops)} item(s). Run 'glaze undo' to revert if needed."
+            f"Successfully renamed {len(executed_ops)} item(s). Run 'rime undo' to revert if needed."
         )
     return executed_ops

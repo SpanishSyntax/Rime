@@ -1,8 +1,8 @@
-"""Tests for Glaze directory scanning, collision resolution, and rename execution."""
+"""Tests for Rime directory scanning, collision resolution, and rename execution."""
 
 from pathlib import Path
 import pytest
-from glaze.engine import scan_directory, resolve_conflicts, execute_renames
+from rime.engine import scan_directory, resolve_conflicts, execute_renames
 
 
 def test_scan_directory(tmp_path: Path):

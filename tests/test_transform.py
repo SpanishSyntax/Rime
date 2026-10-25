@@ -1,6 +1,6 @@
 """Tests for word normalization, case transformation, and filename sanitization."""
 
-from glaze.transform import (
+from rime.transform import (
     normalize_words,
     strip_accents,
     transform_words,

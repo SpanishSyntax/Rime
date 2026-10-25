@@ -1,4 +1,4 @@
-"""Undo log tracking and reversal engine for Glaze."""
+"""Undo log tracking and reversal engine for Rime."""
 
 from __future__ import annotations
 
@@ -7,11 +7,11 @@ import os
 import sys
 from pathlib import Path
 
-from glaze.ui import ui
+from rime.ui import ui
 
 UNDO_LOG_PATH = Path(
     os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state")
-) / "glaze" / "undo.json"
+) / "rime" / "undo.json"
 
 
 def get_undo_log_path() -> Path:
@@ -60,7 +60,7 @@ def run_undo(dry_run: bool = False, list_only: bool = False) -> bool:
             lines.append(
                 f"{tag} {ui.dim(new_p.name)} {ui.cyan('→')} {ui.bold(old_p.name)}"
             )
-        ui.panel(f"GLAZE UNDO LOG ({len(data)} operations)", lines)
+        ui.panel(f"RIME UNDO LOG ({len(data)} operations)", lines)
         ui.info("Dry-run preview only. No files were modified.", symbol="💡")
         return True
 

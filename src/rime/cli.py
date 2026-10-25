@@ -1,4 +1,4 @@
-"""CLI argument router, interactive selector, and execution harness for Glaze."""
+"""CLI argument router, interactive selector, and execution harness for Rime."""
 
 from __future__ import annotations
 
@@ -7,18 +7,18 @@ import sys
 from pathlib import Path
 from typing import Any, Sequence
 
-from glaze import __version__
-from glaze.config import load_user_config
-from glaze.engine import RenamePlan, execute_renames, resolve_conflicts, scan_directory
-from glaze.history import UNDO_LOG_PATH, get_undo_log_path, run_undo, save_undo_log
-from glaze.transform import (
+from rime import __version__
+from rime.config import load_user_config
+from rime.engine import RenamePlan, execute_renames, resolve_conflicts, scan_directory
+from rime.history import UNDO_LOG_PATH, get_undo_log_path, run_undo, save_undo_log
+from rime.transform import (
     CASE_OPTIONS,
     normalize_words,
     sanitize_filename,
     strip_accents,
     transform_words,
 )
-from glaze.ui import add_color_args, handle_color_args, ui
+from rime.ui import add_color_args, handle_color_args, ui
 
 __all__ = [
     "main",
@@ -44,9 +44,9 @@ def print_help() -> None:
     print(f"""{ui.badge()} {ui.bold("Universal Filename Sanitizer, Case Transformer & Batch Renamer")}
 
 {ui.blue("Usage:")}
-  glaze [options]                    Interactive mode (prompts for target format)
-  glaze <format> [options]           Batch rename current directory using specific format
-  glaze undo [options]               Revert previous batch rename operations
+  rime [options]                    Interactive mode (prompts for target format)
+  rime <format> [options]           Batch rename current directory using specific format
+  rime undo [options]               Revert previous batch rename operations
 
 {ui.blue("Case Formats:")}
   --title-snake          Title_Snake_Case (e.g. My_Document_File.pdf) [Default]
@@ -75,22 +75,22 @@ def print_help() -> None:
   -V, -v, --version      Show version information and exit
 
 {ui.blue("Undo Commands:")}
-  glaze undo             Revert the most recent rename batch
-  glaze undo --dry-run   Preview which files would be reverted without renaming
-  glaze undo --list      Inspect previous rename log records
+  rime undo             Revert the most recent rename batch
+  rime undo --dry-run   Preview which files would be reverted without renaming
+  rime undo --list      Inspect previous rename log records
 
 {ui.blue("Examples:")}
-  glaze                              # Interactive wizard (prompts for case format)
-  glaze --snake                      # Convert current folder to snake_case
-  glaze --title-snake -e pdf         # Rename only *.pdf files to Title_Snake_Case
-  glaze --kebab -r --safe            # Recursive kebab-case with safe ASCII
-  glaze --pascal -n                  # Dry-run preview without renaming files
-  glaze undo                         # Revert last executed batch rename
+  rime                              # Interactive wizard (prompts for case format)
+  rime --snake                      # Convert current folder to snake_case
+  rime --title-snake -e pdf         # Rename only *.pdf files to Title_Snake_Case
+  rime --kebab -r --safe            # Recursive kebab-case with safe ASCII
+  rime --pascal -n                  # Dry-run preview without renaming files
+  rime undo                         # Revert last executed batch rename
 """)
 
 
 def _build_parser(user_cfg: dict[str, Any]) -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="glaze", add_help=False)
+    parser = argparse.ArgumentParser(prog="rime", add_help=False)
     parser.add_argument("paths", nargs="*", help="Optional specific files or directories to process.")
     parser.add_argument("-d", "--dir", default=".", help="Target directory (Default: current directory).")
     parser.add_argument("-e", "--ext", default=str(user_cfg.get("ext", "*")), help="Filter by file extension.")
@@ -139,7 +139,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"{ui.badge()} {ui.bold(f'v{__version__}')}")
         return 0
 
-    # Handle 'glaze undo' and 'glaze log'
+    # Handle 'rime undo' and 'rime log'
     if raw_args and raw_args[0] in ("undo", "log"):
         is_list = raw_args[0] == "log" or any(a in ("--list", "-l") for a in raw_args[1:])
         is_dry = any(a in ("-n", "--dry-run") for a in raw_args[1:])
@@ -157,11 +157,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if is_interactive_session:
         panel_lines = [
-            f"{ui.bold('Glaze Version:')}    {ui.bold_cyan(f'v{__version__}')} (Batch Renamer & File Slugifier)",
+            f"{ui.bold('Rime Version:')}     {ui.bold_cyan(f'v{__version__}')} (Batch Renamer & File Slugifier)",
             f"{ui.bold('Target Directory:')} {ui.cyan(str(target_dir))}",
             f"{ui.bold('Default Mode:')}     {str(user_cfg.get('case_mode', 'title_snake'))} (Filter: {args.ext})",
         ]
-        ui.panel("GLAZE BATCH RENAME ENGINE", panel_lines)
+        ui.panel("RIME BATCH RENAME ENGINE", panel_lines)
 
     if not args.case_mode and is_interactive_session:
         case_mode = ui.select("Select target case format:", CASE_OPTIONS)
@@ -179,7 +179,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"{ui.bold('Scan Scope:')}       {scope_str} | Hidden: {hidden_str} | Charset: {safe_str}",
         f"{ui.bold('Execution Mode:')}   {dry_str}",
     ]
-    ui.panel("GLAZE BATCH RENAME ENGINE", scan_lines)
+    ui.panel("RIME BATCH RENAME ENGINE", scan_lines)
 
     plans = scan_directory(
         root=target_dir,

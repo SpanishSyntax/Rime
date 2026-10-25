@@ -1,8 +1,8 @@
-# Glaze ✨
+# Rime ❄️
 
 > **Universal Filename Sanitizer, Case Transformer & Batch Rename Engine**
 
-Glaze is an ultra-fast, opinionated batch renaming utility designed to normalize messy filenames, standardize project conventions, and perform robust case transformations across large directories.
+Rime is an ultra-fast, opinionated batch renaming utility designed to normalize messy filenames, standardize project conventions, and perform robust case transformations across large directories.
 
 ---
 
@@ -18,7 +18,7 @@ Glaze is an ultra-fast, opinionated batch renaming utility designed to normalize
   - `lowercase` / `UPPERCASE`
 - 🧠 **Smart Boundary Detection**: Automatically splits `camelCase`, `PascalCase`, dots, hyphens, and underscores into distinct words before transforming.
 - 🌐 **Safe ASCII & Accent Normalization (`-s / --safe`)**: Decomposes Unicode diacritics (`Café` $\to$ `Cafe`, `München` $\to$ `Munchen`) rather than destructively erasing international characters.
-- 🔄 **1-Command Undo Engine (`glaze undo`)**: Stores a transaction journal in cache, allowing instant rollback of any batch rename operation.
+- 🔄 **1-Command Undo Engine (`rime undo`)**: Stores a transaction journal in cache, allowing instant rollback of any batch rename operation.
 - 🌲 **Recursive Traversal (`-r / --recursive`)**: Recursively processes subdirectories bottom-up so child files are renamed cleanly before parent directories.
 - 📁 **Directory Renaming (`--dirs`)**: Option to sanitize and rename directory names alongside regular files.
 - 🛡️ **Collision Protection**: Pre-checks target paths and prevents accidental overwrites if a file with the destination name already exists.
@@ -29,29 +29,29 @@ Glaze is an ultra-fast, opinionated batch renaming utility designed to normalize
 
 ## 🚀 Quick Start
 
-Run Glaze directly via Nix without installing:
+Run Rime directly via Nix without installing:
 
 ```bash
 # Sanitize all files in the current directory to Title_Snake_Case (Default)
-nix run github:SpanishSyntax/Glaze
+nix run github:SpanishSyntax/Rime
 
 # Convert all filenames to standard_snake_case
-nix run github:SpanishSyntax/Glaze -- --snake
+nix run github:SpanishSyntax/Rime -- --snake
 
 # Convert to standard-kebab-case with lowercase extensions
-nix run github:SpanishSyntax/Glaze -- --kebab --lower-ext
+nix run github:SpanishSyntax/Rime -- --kebab --lower-ext
 
 # Filter by extension (e.g. only audio or documentation files)
-nix run github:SpanishSyntax/Glaze -- -e mp3 --title-snake
+nix run github:SpanishSyntax/Rime -- -e pdf --title-snake
 
 # Safe ASCII mode with recursive directory traversal
-nix run github:SpanishSyntax/Glaze -- -r -s
+nix run github:SpanishSyntax/Rime -- -r -s
 
 # Dry-run preview
-nix run github:SpanishSyntax/Glaze -- --snake --dry-run
+nix run github:SpanishSyntax/Rime -- --snake --dry-run
 
 # Revert the last executed batch rename
-nix run github:SpanishSyntax/Glaze -- undo
+nix run github:SpanishSyntax/Rime -- undo
 ```
 
 ---
@@ -59,8 +59,8 @@ nix run github:SpanishSyntax/Glaze -- undo
 ## 💻 CLI Commands & Options
 
 ```text
-Usage: glaze [paths...] [options]
-       glaze undo [options]
+Usage: rime [paths...] [options]
+       rime undo [options]
 
 Options:
   -d, --dir PATH         Target directory (Default: current directory)
@@ -98,24 +98,24 @@ Case Transformations:
 
 ## 🛠️ Home Manager Configuration
 
-Add Glaze to your `flake.nix`:
+Add Rime to your `flake.nix`:
 
 ```nix
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    glaze = {
-      url = "github:SpanishSyntax/Glaze";
+    rime = {
+      url = "github:SpanishSyntax/Rime";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, glaze, ... }: {
+  outputs = { self, nixpkgs, rime, ... }: {
     homeConfigurations.user = home-manager.lib.homeManagerConfiguration {
       modules = [
-        glaze.homeManagerModules.default
+        rime.homeManagerModules.default
         {
-          programs.glaze.enable = true;
+          programs.rime.enable = true;
         }
       ];
     };
@@ -123,7 +123,7 @@ Add Glaze to your `flake.nix`:
 }
 ```
 
-Once enabled, `glaze` is available in your `$PATH`.
+Once enabled, `rime` is available in your `$PATH`.
 
 ---
 

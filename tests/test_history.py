@@ -1,12 +1,12 @@
-"""Tests for Glaze undo history and logging."""
+"""Tests for Rime undo history and logging."""
 
 from pathlib import Path
-from glaze.history import save_undo_log, run_undo
+from rime.history import save_undo_log, run_undo
 
 
 def test_save_and_run_undo(tmp_path: Path, monkeypatch):
     undo_file = tmp_path / "undo.json"
-    monkeypatch.setattr("glaze.history.UNDO_LOG_PATH", undo_file)
+    monkeypatch.setattr("rime.history.UNDO_LOG_PATH", undo_file)
 
     orig = tmp_path / "old.txt"
     renamed = tmp_path / "new.txt"

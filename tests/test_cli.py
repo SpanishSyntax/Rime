@@ -1,8 +1,8 @@
-"""Tests for Glaze CLI parsing and options."""
+"""Tests for Rime CLI parsing and options."""
 
 from pathlib import Path
-from glaze import __version__
-from glaze.cli import main
+from rime import __version__
+from rime.cli import main
 
 
 def test_cli_version(capsys):
@@ -25,6 +25,6 @@ def test_cli_dry_run(tmp_path: Path, monkeypatch, capsys):
     ret = main(["--snake", "--dry-run"])
     assert ret == 0
     captured = capsys.readouterr()
-    assert "GLAZE BATCH RENAME ENGINE" in captured.out
+    assert "RIME BATCH RENAME ENGINE" in captured.out
     assert "Dry-run complete" in captured.out
     assert (tmp_path / "Old Name.txt").exists()

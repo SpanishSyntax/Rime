@@ -169,16 +169,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print_help()
         return 0
 
-    if any(a in ("-V", "-v", "--version", "version") for a in raw_args):
-        if ui.is_json:
-            import json
-
-            print(json.dumps({"app": "rime", "version": __version__}))
-            return 0
-        if ui.is_agent:
-            print(f"rime {__version__}")
-            return 0
-        print(f"{ui.badge()} {ui.bold(f'v{__version__}')}")
+    if ui.handle_version_arg(raw_args, __version__):
         return 0
 
     # Handle 'rime undo' and 'rime log'
@@ -191,7 +182,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser(user_cfg)
     args = parser.parse_args(raw_args)
 
-    is_interactive_session = not ui.is_agent and (args.interactive or (not raw_args and sys.stdin.isatty()))
+    is_interactive_session = ui.is_interactive and (args.interactive or not raw_args)
     target_dir = Path(args.dir).resolve()
     if not target_dir.exists():
         ui.error(f"Directory '{target_dir}' does not exist.")
@@ -249,8 +240,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 1
 
     if ui.is_json:
-        import json
-
         data = {
             "status": "ok",
             "count": len(plans),
@@ -271,7 +260,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         }
         if not args.dry_run and executable_plans:
             execute_renames(executable_plans)
-        print(json.dumps(data, indent=2))
+        ui.json(data)
         return 0
 
     print()

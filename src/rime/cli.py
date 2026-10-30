@@ -212,7 +212,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"{ui.bold('Scan Scope:')}       {scope_str} | Hidden: {hidden_str} | Charset: {safe_str}",
         f"{ui.bold('Execution Mode:')}   {dry_str}",
     ]
-    ui.panel("RIME BATCH RENAME ENGINE", scan_lines)
+    if not ui.is_json:
+        ui.panel("RIME BATCH RENAME ENGINE", scan_lines)
 
     plans = scan_directory(
         root=target_dir,
@@ -226,6 +227,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
 
     if not plans:
+        if ui.is_json:
+            ui.json({"status": "ok", "count": 0, "renamed": 0, "plans": []})
+            return 0
         ui.success("All files already match the target format. Nothing to rename.")
         return 0
 
@@ -248,7 +252,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "collisions_count": len(collisions),
             "plans": [
                 {
-                    "old": str(p.old_path),
+                    "old": str(p.original),
                     "new": str(p.new_path),
                     "relative_old": p.relative_old,
                     "relative_new": p.relative_new,

@@ -41,6 +41,40 @@ __all__ = [
 
 def print_help() -> None:
     """Prints colored usage instructions matching Flaker, Folio, Borealis, and Firn."""
+    if ui.is_agent:
+        print(f"""Rime v{__version__} - Universal Filename Sanitizer & Batch Renamer
+Usage: rime [options]
+       rime <format> [options]
+       rime undo [options]
+
+Case Formats:
+  --title-snake          Title_Snake_Case (default)
+  --snake                snake_case
+  --kebab                kebab-case
+  --pascal               PascalCase
+  --camel                camelCase
+  --lower                lowercase
+  --upper                UPPERCASE
+  --upper-snake          UPPER_SNAKE_CASE
+
+Options:
+  -A, --agent            Compact machine/agent friendly output mode
+  --json                 Structured JSON output mode
+  -d, --dir DIR          Target directory (default: .)
+  -e, --ext EXT          Target specific extension only
+  -r, --recursive        Recursively scan all subdirectories
+  --dirs                 Also rename directories in addition to files
+  -s, --safe             Strict ASCII mode: strip accents & special chars
+  -n, --dry-run          Preview planned renames without executing them
+  -y, --yes              Skip confirmation prompt
+  --conflict MODE        Conflict resolution: skip, suffix, or abort
+  --color MODE           Color output mode: auto, always, never
+  --no-color             Disable colored output
+  -h, --help             Show this help message and exit
+  -V, -v, --version      Show version information and exit
+""")
+        return
+
     print(f"""{ui.badge()} {ui.bold("Universal Filename Sanitizer, Case Transformer & Batch Renamer")}
 
 {ui.blue("Usage:")}
@@ -136,6 +170,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
 
     if any(a in ("-V", "-v", "--version", "version") for a in raw_args):
+        if ui.is_json:
+            import json
+
+            print(json.dumps({"app": "rime", "version": __version__}))
+            return 0
+        if ui.is_agent:
+            print(f"rime {__version__}")
+            return 0
         print(f"{ui.badge()} {ui.bold(f'v{__version__}')}")
         return 0
 
@@ -149,7 +191,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser(user_cfg)
     args = parser.parse_args(raw_args)
 
-    is_interactive_session = args.interactive or (not raw_args and sys.stdin.isatty())
+    is_interactive_session = not ui.is_agent and (args.interactive or (not raw_args and sys.stdin.isatty()))
     target_dir = Path(args.dir).resolve()
     if not target_dir.exists():
         ui.error(f"Directory '{target_dir}' does not exist.")
@@ -206,6 +248,32 @@ def main(argv: Sequence[str] | None = None) -> int:
         ui.error(str(exc))
         return 1
 
+    if ui.is_json:
+        import json
+
+        data = {
+            "status": "ok",
+            "count": len(plans),
+            "renamed": len(executable_plans) if not args.dry_run else 0,
+            "dry_run": args.dry_run,
+            "collisions_count": len(collisions),
+            "plans": [
+                {
+                    "old": str(p.old_path),
+                    "new": str(p.new_path),
+                    "relative_old": p.relative_old,
+                    "relative_new": p.relative_new,
+                    "is_dir": p.is_dir,
+                    "collision": p in collisions,
+                }
+                for p in plans
+            ],
+        }
+        if not args.dry_run and executable_plans:
+            execute_renames(executable_plans)
+        print(json.dumps(data, indent=2))
+        return 0
+
     print()
     for p in plans:
         if p in collisions:
@@ -221,7 +289,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
 
     if args.dry_run:
-        ui.info("Dry-run complete. Re-run without -n to apply renames permanently.", symbol="💡")
+        if not ui.is_agent:
+            ui.info("Dry-run complete. Re-run without -n to apply renames permanently.", symbol="💡")
         return 0
 
     if not executable_plans:

@@ -125,19 +125,59 @@ Options:
 
 def _build_parser(user_cfg: dict[str, Any]) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="rime", add_help=False)
-    parser.add_argument("paths", nargs="*", help="Optional specific files or directories to process.")
-    parser.add_argument("-d", "--dir", default=".", help="Target directory (Default: current directory).")
-    parser.add_argument("-e", "--ext", default=str(user_cfg.get("ext", "*")), help="Filter by file extension.")
-    parser.add_argument("-a", "--all", "--include-hidden", "--hidden", dest="include_hidden", action="store_true", default=bool(user_cfg.get("include_hidden", False)))
-    parser.add_argument("-s", "--safe", action="store_true", default=bool(user_cfg.get("safe", False)))
-    parser.add_argument("-l", "--lower-ext", dest="lower_ext", action="store_true", default=bool(user_cfg.get("lower_ext", True)))
+    parser.add_argument(
+        "paths", nargs="*", help="Optional specific files or directories to process."
+    )
+    parser.add_argument(
+        "-d",
+        "--dir",
+        default=".",
+        help="Target directory (Default: current directory).",
+    )
+    parser.add_argument(
+        "-e",
+        "--ext",
+        default=str(user_cfg.get("ext", "*")),
+        help="Filter by file extension.",
+    )
+    parser.add_argument(
+        "-a",
+        "--all",
+        "--include-hidden",
+        "--hidden",
+        dest="include_hidden",
+        action="store_true",
+        default=bool(user_cfg.get("include_hidden", False)),
+    )
+    parser.add_argument(
+        "-s", "--safe", action="store_true", default=bool(user_cfg.get("safe", False))
+    )
+    parser.add_argument(
+        "-l",
+        "--lower-ext",
+        dest="lower_ext",
+        action="store_true",
+        default=bool(user_cfg.get("lower_ext", True)),
+    )
     parser.add_argument("--no-lower-ext", dest="lower_ext", action="store_false")
-    parser.add_argument("-r", "--recursive", action="store_true", default=bool(user_cfg.get("recursive", False)))
-    parser.add_argument("--dirs", action="store_true", default=bool(user_cfg.get("include_dirs", False)))
+    parser.add_argument(
+        "-r",
+        "--recursive",
+        action="store_true",
+        default=bool(user_cfg.get("recursive", False)),
+    )
+    parser.add_argument(
+        "--dirs", action="store_true", default=bool(user_cfg.get("include_dirs", False))
+    )
     parser.add_argument("-n", "--dry-run", action="store_true")
     parser.add_argument("-y", "--yes", action="store_true")
     parser.add_argument("-i", "--interactive", action="store_true")
-    parser.add_argument("--conflict", dest="on_conflict", choices=["skip", "suffix", "abort"], default=str(user_cfg.get("on_conflict", "skip")))
+    parser.add_argument(
+        "--conflict",
+        dest="on_conflict",
+        choices=["skip", "suffix", "abort"],
+        default=str(user_cfg.get("on_conflict", "skip")),
+    )
     add_color_args(parser)
     parser.add_argument("-h", "--help", action="store_true")
     parser.add_argument("-V", "-v", "--version", action="store_true")
@@ -153,7 +193,9 @@ def _build_parser(user_cfg: dict[str, Any]) -> argparse.ArgumentParser:
         ("--upper", "upper"),
         ("--upper-snake", "upper_snake"),
     ]:
-        case_group.add_argument(flag, dest="case_mode", action="store_const", const=mode)
+        case_group.add_argument(
+            flag, dest="case_mode", action="store_const", const=mode
+        )
 
     return parser
 
@@ -174,7 +216,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     # Handle 'rime undo' and 'rime log'
     if raw_args and raw_args[0] in ("undo", "log"):
-        is_list = raw_args[0] == "log" or any(a in ("--list", "-l") for a in raw_args[1:])
+        is_list = raw_args[0] == "log" or any(
+            a in ("--list", "-l") for a in raw_args[1:]
+        )
         is_dry = any(a in ("-n", "--dry-run") for a in raw_args[1:])
         success = run_undo(dry_run=is_dry, list_only=is_list)
         return 0 if success else 1
@@ -211,8 +255,14 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     scope_str = "recursive" if args.recursive else "current directory"
     safe_str = "Safe ASCII (sanitized)" if args.safe else "standard unicode"
-    hidden_str = "all (including hidden)" if args.include_hidden else "standard (hidden skipped)"
-    dry_str = ui.yellow("DRY RUN (Simulation)") if args.dry_run else ui.green("LIVE EXECUTION")
+    hidden_str = (
+        "all (including hidden)" if args.include_hidden else "standard (hidden skipped)"
+    )
+    dry_str = (
+        ui.yellow("DRY RUN (Simulation)")
+        if args.dry_run
+        else ui.green("LIVE EXECUTION")
+    )
 
     scan_lines = [
         f"{ui.bold('Target Directory:')} {ui.cyan(str(target_dir))}",
@@ -278,10 +328,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     print()
     for p in plans:
         if p in collisions:
-            print(f"  {ui.yellow('[COLLISION SKIPPED]')} {ui.dim(repr(p.relative_old))} {ui.yellow('⇸')} target {ui.dim(repr(p.relative_new))} exists")
+            print(
+                f"  {ui.yellow('[COLLISION SKIPPED]')} {ui.dim(repr(p.relative_old))} {ui.yellow('⇸')} target {ui.dim(repr(p.relative_new))} exists"
+            )
         else:
             tag = "DIR" if p.is_dir else "FILE"
-            print(f"  {ui.dim(f'[{tag}]')} {ui.dim(repr(p.relative_old))} {ui.cyan('→')} {ui.bold_green(p.relative_new)}")
+            print(
+                f"  {ui.dim(f'[{tag}]')} {ui.dim(repr(p.relative_old))} {ui.cyan('→')} {ui.bold_green(p.relative_new)}"
+            )
 
     print()
     ui.info(
@@ -291,7 +345,10 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     if args.dry_run:
         if not ui.is_agent:
-            ui.info("Dry-run complete. Re-run without -n to apply renames permanently.", symbol="💡")
+            ui.info(
+                "Dry-run complete. Re-run without -n to apply renames permanently.",
+                symbol="💡",
+            )
         return 0
 
     if not executable_plans:

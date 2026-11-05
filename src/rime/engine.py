@@ -129,9 +129,9 @@ def resolve_conflicts(
     seen_destinations: set[Path] = set()
 
     for p in plans:
-        is_collision = (
-            p.new_path.exists() and p.new_path != p.original
-        ) or (p.new_path in seen_destinations)
+        is_collision = (p.new_path.exists() and p.new_path != p.original) or (
+            p.new_path in seen_destinations
+        )
 
         if is_collision:
             if on_conflict == "abort":

@@ -1,6 +1,7 @@
 """Tests for Rime CLI parsing and options."""
 
 from pathlib import Path
+
 from rime import __version__
 from rime.cli import main
 

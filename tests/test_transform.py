@@ -2,9 +2,9 @@
 
 from rime.transform import (
     normalize_words,
+    sanitize_filename,
     strip_accents,
     transform_words,
-    sanitize_filename,
 )
 
 
@@ -14,7 +14,13 @@ def test_normalize_words():
     assert normalize_words("snake_case_name") == ["snake", "case", "name"]
     assert normalize_words("kebab-case-name") == ["kebab", "case", "name"]
     assert normalize_words("file.with.dots") == ["file", "with", "dots"]
-    assert normalize_words("spaced string with (symbols) & 123") == ["spaced", "string", "with", "symbols", "123"]
+    assert normalize_words("spaced string with (symbols) & 123") == [
+        "spaced",
+        "string",
+        "with",
+        "symbols",
+        "123",
+    ]
     assert normalize_words("") == []
 
 

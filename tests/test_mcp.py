@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from rime.mcp import StdioMCPServer, TOOL_DEFINITIONS, execute_tool
+
+from rime.mcp import StdioMCPServer, execute_tool
 
 
 def test_mcp_initialize() -> None:

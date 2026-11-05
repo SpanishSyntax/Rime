@@ -1,8 +1,10 @@
 """Tests for Rime directory scanning, collision resolution, and rename execution."""
 
 from pathlib import Path
+
 import pytest
-from rime.engine import scan_directory, resolve_conflicts, execute_renames
+
+from rime.engine import execute_renames, resolve_conflicts, scan_directory
 
 
 def test_scan_directory(tmp_path: Path):
@@ -40,7 +42,9 @@ def test_resolve_conflicts_suffix(tmp_path: Path):
         recursive=False,
         include_dirs=False,
     )
-    executable, collisions = resolve_conflicts(plans, on_conflict="suffix", target_dir=tmp_path)
+    executable, collisions = resolve_conflicts(
+        plans, on_conflict="suffix", target_dir=tmp_path
+    )
     assert len(executable) == 1
     assert executable[0].new_path.name == "target_name_1.txt"
 

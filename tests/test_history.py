@@ -1,7 +1,8 @@
 """Tests for Rime undo history and logging."""
 
 from pathlib import Path
-from rime.history import save_undo_log, run_undo
+
+from rime.history import run_undo, save_undo_log
 
 
 def test_save_and_run_undo(tmp_path: Path, monkeypatch):

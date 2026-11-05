@@ -9,9 +9,11 @@ from pathlib import Path
 
 from rime.ui import ui
 
-UNDO_LOG_PATH = Path(
-    os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state")
-) / "rime" / "undo.json"
+UNDO_LOG_PATH = (
+    Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state"))
+    / "rime"
+    / "undo.json"
+)
 
 
 def get_undo_log_path() -> Path:
@@ -116,9 +118,7 @@ def run_undo(dry_run: bool = False, list_only: bool = False) -> bool:
             pass
         return True
     else:
-        ui.warn(
-            f"Reverted {success_count} file(s) with {failure_count} failure(s)."
-        )
+        ui.warn(f"Reverted {success_count} file(s) with {failure_count} failure(s).")
         remaining = [item for item in data if item not in reversed_ops]
         save_undo_log([(r["old"], r["new"]) for r in remaining])
         return False

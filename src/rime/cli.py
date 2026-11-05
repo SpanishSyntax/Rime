@@ -18,7 +18,13 @@ from rime.transform import (
     strip_accents,
     transform_words,
 )
-from rime.ui import add_color_args, handle_color_args, ui
+from rime.ui import (
+    add_agent_args,
+    add_color_args,
+    handle_agent_args,
+    handle_color_args,
+    ui,
+)
 
 __all__ = [
     "main",
@@ -179,6 +185,7 @@ def _build_parser(user_cfg: dict[str, Any]) -> argparse.ArgumentParser:
         default=str(user_cfg.get("on_conflict", "skip")),
     )
     add_color_args(parser)
+    add_agent_args(parser)
     parser.add_argument("-h", "--help", action="store_true")
     parser.add_argument("-V", "-v", "--version", action="store_true")
 
@@ -202,6 +209,7 @@ def _build_parser(user_cfg: dict[str, Any]) -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     raw_args = list(argv) if argv is not None else sys.argv[1:]
+    handle_agent_args(raw_args)
     user_cfg = load_user_config()
     if "color" in user_cfg:
         ui.set_color_mode(str(user_cfg["color"]))
@@ -270,7 +278,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"{ui.bold('Scan Scope:')}       {scope_str} | Hidden: {hidden_str} | Charset: {safe_str}",
         f"{ui.bold('Execution Mode:')}   {dry_str}",
     ]
-    if not ui.is_json:
+    if not ui.is_json and not ui.is_agent:
         ui.panel("RIME BATCH RENAME ENGINE", scan_lines)
 
     plans = scan_directory(
@@ -323,6 +331,37 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not args.dry_run and executable_plans:
             execute_renames(executable_plans)
         ui.json(data)
+        return 0
+
+    if ui.is_agent or getattr(ui, "is_toon", False):
+        if not args.dry_run and executable_plans:
+            execute_renames(executable_plans)
+        if hasattr(ui, "data"):
+            ui.data(
+                data=[
+                    {
+                        "old": p.relative_old,
+                        "new": p.relative_new,
+                        "is_dir": p.is_dir,
+                        "status": "collision"
+                        if p in collisions
+                        else ("renamed" if not args.dry_run else "planned"),
+                    }
+                    for p in plans
+                ],
+                title="Rename Plans",
+                headers=["old", "new", "status"],
+                rows=[
+                    [
+                        p.relative_old,
+                        p.relative_new,
+                        "collision"
+                        if p in collisions
+                        else ("renamed" if not args.dry_run else "planned"),
+                    ]
+                    for p in plans
+                ],
+            )
         return 0
 
     print()

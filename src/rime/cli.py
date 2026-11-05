@@ -179,6 +179,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         success = run_undo(dry_run=is_dry, list_only=is_list)
         return 0 if success else 1
 
+    # Handle 'rime mcp'
+    if raw_args and raw_args[0] == "mcp":
+        from rime.mcp import StdioMCPServer
+
+        server = StdioMCPServer()
+        server.run()
+        return 0
+
     parser = _build_parser(user_cfg)
     args = parser.parse_args(raw_args)
 

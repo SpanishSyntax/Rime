@@ -2,11 +2,16 @@
   <img src="assets/banner.png" alt="Delicate rime ice needle crystals formed by freezing supercooled fog" width="100%" />
 </p>
 
-# 🔤 Rime
+# Rime 🔤
 
-> **Universal Filename Sanitizer, Case Transformer & Batch Rename Engine**
+Universal filename sanitizer, Unicode accent normalizer, and batch renaming engine with instant transaction rollback.
 
-Rime is an ultra-fast, opinionated batch renaming utility designed to normalize messy filenames, standardize project conventions, and perform robust case transformations across large directories.
+Rime is a fast, non-destructive utility designed to normalize irregular filenames, decompose diacritics, and enforce consistent casing conventions across directories and project hierarchies.
+
+---
+
+> [!TIP]
+> **Documentation Site**: Detailed transformation rules, tokenization algorithms, and configuration examples are available on the **[Documentation Site](https://spanishsyntax.github.io/Rime)**.
 
 ---
 
@@ -14,17 +19,20 @@ Rime is an ultra-fast, opinionated batch renaming utility designed to normalize 
 
 > **rime** (`/raɪm/`) — *noun:* A crystalline crust of ice formed when supercooled fog droplets freeze instantly upon contacting exposed surfaces, encasing irregular shapes in smooth, uniform white shells.
 
-In subzero coastal air, jagged rocks, rough wire, and irregular driftwood are rapidly coated in rime—smoothed out and regularized into clean, unified crystalline forms.
+In subzero coastal air, jagged rocks, rough wire fences, and weather-beaten timber are steadily coated in rime—smoothed out and regularized into clean, unified crystalline forms.
 
-**Rime encases jagged filesystems in clean conventions:**
-- **Surface Regularization**: Rapidly scans messy directories, sanitizing irregular spaces, special characters, and mixed casing into consistent, predictable naming conventions.
-- **Deterministic Transformations**: Supports kebab-case, snake_case, camelCase, and title formatting across thousands of files with dry-run verification and atomic renaming safety.
+Project directories frequently mirror that jagged landscape: spaces mixed with underscores, erratic capitalizations, accented characters, and mismatched file extensions.
+
+**Rime encases uneven filesystems in clean conventions:**
+
+- **Surface Regularization**: Scans directories to sanitize erratic whitespace, special punctuation, and mixed casing into consistent, predictable naming conventions.
+- **Deterministic Transformations**: Supports eight distinct casing formats, Unicode NFKD diacritic normalization, dry-run simulations, and transaction-logged rollback.
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔠 **8 Case Transformation Modes**:
+- **8 Case Transformation Modes**:
   - `Title_Snake_Case` (Default)
   - `standard_snake_case`
   - `UPPER_SNAKE_CASE`
@@ -32,23 +40,23 @@ In subzero coastal air, jagged rocks, rough wire, and irregular driftwood are ra
   - `PascalCase`
   - `camelCase`
   - `lowercase` / `UPPERCASE`
-- 🧠 **Smart Boundary Detection**: Automatically splits `camelCase`, `PascalCase`, dots, hyphens, and underscores into distinct words before transforming.
-- 🌐 **Safe ASCII & Accent Normalization (`-s / --safe`)**: Decomposes Unicode diacritics (`Café` $\to$ `Cafe`, `München` $\to$ `Munchen`) rather than destructively erasing international characters.
-- 🔄 **1-Command Undo Engine (`rime undo`)**: Stores a transaction journal in cache, allowing instant rollback of any batch rename operation.
-- 🌲 **Recursive Traversal (`-r / --recursive`)**: Recursively processes subdirectories bottom-up so child files are renamed cleanly before parent directories.
-- 📁 **Directory Renaming (`--dirs`)**: Option to sanitize and rename directory names alongside regular files.
-- 🛡️ **Collision Protection**: Pre-checks target paths and prevents accidental overwrites if a file with the destination name already exists.
-- 🧪 **Dry-Run Simulation (`-n / --dry-run`)**: Preview all planned changes in a colored diff view without touching the filesystem.
-- 🪶 **Zero Host Dependencies**: Pure standard library core (<20ms execution time).
+- **Word Boundary Tokenizer**: Splits camelCase, PascalCase, numbers, dots, hyphens, and underscores into cleanly parsed words prior to case transformation.
+- **Safe ASCII Normalization**: Uses Unicode NFKD decomposition (`Café` $\to$ `Cafe`, `München` $\to$ `Munchen`) rather than destructively erasing international characters.
+- **Atomic Undo Engine**: Records all operations in an undo journal for immediate rollback via `rime undo`.
+- **Bottom-Up Directory Traversal**: In recursive directory mode, processes nested children before parents to maintain path validity.
+- **Collision Protection**: Evaluates destination paths before renaming with configurable collision policies (`skip`, `suffix`, `abort`).
+- **Dry-Run Previews**: Simulates planned renames with colored terminal diffs or structured JSON.
+- **Model Context Protocol (MCP)**: Native stdio MCP server for agentic filesystem integrations.
+- **Zero Host Dependencies**: Standard library core with sub-20ms execution time.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 Run Rime directly via Nix without installing:
 
 ```bash
-# Sanitize all files in the current directory to Title_Snake_Case (Default)
+# Sanitize files in the current directory to Title_Snake_Case (Default)
 nix run github:SpanishSyntax/Rime
 
 # Convert all filenames to standard_snake_case
@@ -57,7 +65,7 @@ nix run github:SpanishSyntax/Rime -- --snake
 # Convert to standard-kebab-case with lowercase extensions
 nix run github:SpanishSyntax/Rime -- --kebab --lower-ext
 
-# Filter by extension (e.g. only audio or documentation files)
+# Filter by extension (e.g. only PDF files)
 nix run github:SpanishSyntax/Rime -- -e pdf --title-snake
 
 # Safe ASCII mode with recursive directory traversal
@@ -72,32 +80,31 @@ nix run github:SpanishSyntax/Rime -- undo
 
 ---
 
-## 💻 CLI Commands & Options
+## CLI Reference
 
 ```text
 Usage: rime [paths...] [options]
        rime undo [options]
+       rime mcp
 
 Options:
   -d, --dir PATH         Target directory (Default: current directory)
   -e, --ext EXT          Filter by file extension (e.g., pdf, mp3, txt)
   -a, --all              Include hidden dotfiles (hard-excludes .git)
   -s, --safe             Safe ASCII: strip non-alphanumeric chars & normalize accents
-  -l, --lower-ext        Convert file extensions to lowercase
+  -l, --lower-ext        Convert file extensions to lowercase (Default: true)
   -r, --recursive        Recursively process subdirectories
   --dirs                 Also rename directory names
-  --on-conflict MODE     Collision strategy: skip, abort, suffix (Default: skip)
+  --conflict MODE        Collision strategy: skip, suffix, abort (Default: skip)
   -n, --dry-run          Simulate changes without renaming any files
   -i, --interactive      Prompt for confirmation before applying renames
   -y, --yes              Bypass confirmation prompt
+  -A, --agent            Compact machine-friendly output
+  --json                 Structured JSON output
   --color MODE           Color output mode: auto, always, never (Default: auto)
   --no-color             Disable colored output
-  -h, --help             Show this help menu
+  -h, --help             Show help menu
   -V, -v, --version      Show version information
-
-Undo Options:
-  -n, --dry-run          Preview operations that would be reverted without modifying files
-  -l, --list             List all recorded operations in undo history
 
 Case Transformations:
   --title-snake          Title_Snake_Case (Default)
@@ -108,11 +115,30 @@ Case Transformations:
   --camel                camelCase
   --lower                lowercase
   --upper                UPPERCASE
+
+Undo Options:
+  -n, --dry-run          Preview operations that would be reverted
+  -l, --list             List all recorded operations in undo history
 ```
 
 ---
 
-## 🛠️ Home Manager Configuration
+## Configuration
+
+Rime optionally loads defaults from `~/.config/rime/rime.toml`:
+
+```toml
+[general]
+case_mode = "title_snake"
+lower_ext = true
+safe = false
+on_conflict = "skip"
+color = "auto"
+```
+
+---
+
+## Home Manager Configuration
 
 Add Rime to your `flake.nix`:
 
@@ -139,10 +165,8 @@ Add Rime to your `flake.nix`:
 }
 ```
 
-Once enabled, `rime` is available in your `$PATH`.
-
 ---
 
-## 📜 License
+## License
 
 MIT © SpanishSyntax

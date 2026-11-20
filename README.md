@@ -41,7 +41,7 @@ Project directories frequently mirror that jagged landscape: spaces mixed with u
   - `camelCase`
   - `lowercase` / `UPPERCASE`
 - **Word Boundary Tokenizer**: Splits camelCase, PascalCase, numbers, dots, hyphens, and underscores into cleanly parsed words prior to case transformation.
-- **Safe ASCII Normalization**: Uses Unicode NFKD decomposition (`Café` $\to$ `Cafe`, `München` $\to$ `Munchen`) rather than destructively erasing international characters.
+- **Safe ASCII Normalization**: Uses Unicode NFKD decomposition (`Café` → `Cafe`, `München` → `Munchen`) rather than destructively erasing international characters.
 - **Atomic Undo Engine**: Records all operations in an undo journal for immediate rollback via `rime undo`.
 - **Bottom-Up Directory Traversal**: In recursive directory mode, processes nested children before parents to maintain path validity.
 - **Collision Protection**: Evaluates destination paths before renaming with configurable collision policies (`skip`, `suffix`, `abort`).

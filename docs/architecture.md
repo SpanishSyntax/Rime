@@ -9,7 +9,7 @@
 Rime adheres to strict systems engineering invariants:
 
 1. **Non-Destructive by Default**: Never erase information silently. Unicode diacritics are decomposed rather than stripped; filename collisions are skipped by default rather than overwritten.
-2. **Deterministic Tokenization**: Casing boundaries (e.g. `camelCase` $\to$ `camel` + `case`, `kebab-case` $\to$ `kebab` + `case`) are resolved via regularized lexical tokenization.
+2. **Deterministic Tokenization**: Casing boundaries (e.g. `camelCase` → `camel` + `case`, `kebab-case` → `kebab` + `case`) are resolved via regularized lexical tokenization.
 3. **Atomic Reversibility**: Every destructive filesystem batch operation is serialized to a transaction journal before execution, making rollback a single-step operation.
 
 ---
@@ -29,8 +29,8 @@ Project directories frequently mirror that jagged landscape: spaces mixed with u
 Naïve renaming scripts fail on strings that mix capitalization styles (e.g., `parseXMLDocument_v2.tar.gz`). Rime resolves filenames through a multi-pass regex tokenizer:
 
 1. **Underscore & Hyphen Splitting**: Separates explicit delimiter boundaries (`foo_bar-baz`).
-2. **CamelCase & PascalCase Splitting**: Detects lowercase-to-uppercase transitions (`getHTTPResponse` $\to$ `get`, `HTTP`, `Response`).
-3. **Number Boundary Isolation**: Distinguishes numeric sequences attached to letters (`modelV2` $\to$ `model`, `V2`).
+2. **CamelCase & PascalCase Splitting**: Detects lowercase-to-uppercase transitions (`getHTTPResponse` → `get`, `HTTP`, `Response`).
+3. **Number Boundary Isolation**: Distinguishes numeric sequences attached to letters (`modelV2` → `model`, `V2`).
 4. **Token Assembly**: Emits clean word tokens ready for target case formatting.
 
 ```mermaid

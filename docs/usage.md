@@ -45,9 +45,9 @@ Usage: rime [options]
 | `-e` | `--ext EXT` | Filter files by extension (e.g. `pdf`, `mp3`, `rs`). | All extensions (`*`) |
 | `-r` | `--recursive` | Recursively scan and rename inside subdirectories. | `false` |
 | | `--dirs` | Also rename matching directory names. | `false` |
-| `-s` | `--safe` | Strict ASCII mode: strip accents (`é` $\to$ `e`) and special characters. | `false` |
+| `-s` | `--safe` | Strict ASCII mode: strip accents (`é` → `e`) and special characters. | `false` |
 | `-a` | `--all`, `--hidden` | Include hidden dotfiles (hard-excludes `.git`). | `false` |
-| `-l` | `--lower-ext` | Normalize file extensions to lowercase (`.PDF` $\to$ `.pdf`). | `true` |
+| `-l` | `--lower-ext` | Normalize file extensions to lowercase (`.PDF` → `.pdf`). | `true` |
 | | `--no-lower-ext` | Preserve existing extension casing. | `false` |
 | `-n` | `--dry-run` | Preview planned renames without modifying disk state. | `false` |
 | `-y` | `--yes` | Skip interactive confirmation and apply renames immediately. | `false` |

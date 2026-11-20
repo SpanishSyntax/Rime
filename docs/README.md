@@ -45,14 +45,14 @@ Rime is structured into five core modules:
 
 | Flag | Format Name | Example Transformation |
 | :--- | :--- | :--- |
-| `--title-snake` | `Title_Snake_Case` *(Default)* | `annual report 2024.pdf` $\to$ `Annual_Report_2024.pdf` |
-| `--snake` | `snake_case` | `annual report 2024.pdf` $\to$ `annual_report_2024.pdf` |
-| `--kebab` | `kebab-case` | `annual report 2024.pdf` $\to$ `annual-report-2024.pdf` |
-| `--pascal` | `PascalCase` | `annual report 2024.pdf` $\to$ `AnnualReport2024.pdf` |
-| `--camel` | `camelCase` | `annual report 2024.pdf` $\to$ `annualReport2024.pdf` |
-| `--upper-snake` | `UPPER_SNAKE_CASE` | `annual report 2024.pdf` $\to$ `ANNUAL_REPORT_2024.pdf` |
-| `--lower` | `lowercase` | `Annual_Report_2024.PDF` $\to$ `annual_report_2024.pdf` |
-| `--upper` | `UPPERCASE` | `annual report 2024.pdf` $\to$ `ANNUAL REPORT 2024.pdf` |
+| `--title-snake` | `Title_Snake_Case` *(Default)* | `annual report 2024.pdf` → `Annual_Report_2024.pdf` |
+| `--snake` | `snake_case` | `annual report 2024.pdf` → `annual_report_2024.pdf` |
+| `--kebab` | `kebab-case` | `annual report 2024.pdf` → `annual-report-2024.pdf` |
+| `--pascal` | `PascalCase` | `annual report 2024.pdf` → `AnnualReport2024.pdf` |
+| `--camel` | `camelCase` | `annual report 2024.pdf` → `annualReport2024.pdf` |
+| `--upper-snake` | `UPPER_SNAKE_CASE` | `annual report 2024.pdf` → `ANNUAL_REPORT_2024.pdf` |
+| `--lower` | `lowercase` | `Annual_Report_2024.PDF` → `annual_report_2024.pdf` |
+| `--upper` | `UPPERCASE` | `annual report 2024.pdf` → `ANNUAL REPORT 2024.pdf` |
 
 ---
 

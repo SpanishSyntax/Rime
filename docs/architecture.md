@@ -33,14 +33,10 @@ Naïve renaming scripts fail on strings that mix capitalization styles (e.g., `p
 3. **Number Boundary Isolation**: Distinguishes numeric sequences attached to letters (`modelV2` $\to$ `model`, `V2`).
 4. **Token Assembly**: Emits clean word tokens ready for target case formatting.
 
-```
-"myTest_file-v1.0.tar.gz"
-       │
-       ▼ (Boundary Splitting)
-["my", "Test", "file", "v1", "0"] + [".tar.gz"]
-       │
-       ▼ (Case Transformation: e.g. --snake)
-"my_test_file_v1_0.tar.gz"
+```mermaid
+flowchart TD
+    In["Input: myTest_file-v1.0.tar.gz"] -->|"Boundary Splitting"| Tokens["Tokens: my, Test, file, v1, 0 + .tar.gz"]
+    Tokens -->|"Case Transformation (--snake)"| Out["Output: my_test_file_v1_0.tar.gz"]
 ```
 
 ---

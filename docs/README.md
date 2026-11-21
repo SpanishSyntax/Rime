@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="assets/banner.png" alt="Delicate rime ice needle crystals formed by freezing supercooled fog" width="100%" />
-</p>
+<img src="assets/banner.png" alt="Delicate rime ice needle crystals formed by freezing supercooled fog" width="100%" />
 
 # Rime 🔤
 
